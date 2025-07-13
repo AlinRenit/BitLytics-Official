@@ -19,7 +19,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      originalUrl: "",
+      originalUrl: "https://",
     },
     mode: "onTouched",
   });
@@ -63,7 +63,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         className="sm:w-[450px] w-[360px] relative  shadow-custom pt-8 pb-5 sm:px-8 px-4 rounded-lg"
       >
 
-        <h1 className="font-montserrat sm:mt-0 mt-3 text-center  font-bold sm:text-2xl text-[22px] text-slate-800 ">
+        <h1 className="font-montserrat sm:mt-0 mt-3 text-center  font-bold sm:text-2xl text-[22px] text-slate-800 cursor-pointer z-10">
                 Create New Shorten Url
         </h1>
 
@@ -83,8 +83,8 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         </div>
 
         <button
-          className="bg-customRed font-semibold text-white w-32  bg-custom-gradient  py-2  transition-colors  rounded-md my-3"
-          type="text"
+          className="font-semibold text-white w-32 bg-[var(--color-btnColor)] py-2 transition-colors rounded-md my-3 cursor-pointer"
+          type="submit"
         >
           {loading ? "Loading..." : "Create"}
         </button>
@@ -94,7 +94,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
             <button
               disabled={loading}
               onClick={() => setOpen(false)}
-              className=" absolute right-2 top-2  "
+              className="absolute right-2 top-2 z-10"
             >
               <RxCross2 className="text-slate-800   text-3xl" />
             </button>

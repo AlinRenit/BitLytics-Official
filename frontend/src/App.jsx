@@ -5,6 +5,7 @@ import { getApps } from './utils/helper'
 function App() {
 
   const CurrentApp = getApps();
+
   return (
       <Router>
         <CurrentApp />

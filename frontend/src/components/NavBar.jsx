@@ -3,12 +3,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { useStoreContext } from "../contextApi/ContextApi";
-import { set } from "react-hook-form";
 
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { token, setToken} = useStoreContext();
+  const { token, setToken } = useStoreContext();
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
 

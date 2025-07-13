@@ -1,15 +1,5 @@
 package com.url.shortener.service;
 
-import com.url.shortener.dtos.ClickEventDTO;
-import com.url.shortener.dtos.UrlMappingDTO;
-import com.url.shortener.models.ClickEvent;
-import com.url.shortener.models.UrlMapping;
-import com.url.shortener.models.User;
-import com.url.shortener.repository.ClickEventRepository;
-import com.url.shortener.repository.UrlMappingRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +7,18 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-//ShortUrlCreation
+import org.springframework.stereotype.Service;
+
+import com.url.shortener.dtos.ClickEventDTO;
+import com.url.shortener.dtos.UrlMappingDTO;
+import com.url.shortener.models.ClickEvent;
+import com.url.shortener.models.UrlMapping;
+import com.url.shortener.models.User;
+import com.url.shortener.repository.ClickEventRepository;
+import com.url.shortener.repository.UrlMappingRepository;
+
+import lombok.AllArgsConstructor;
+
 @Service
 @AllArgsConstructor
 public class UrlMappingService {
@@ -37,14 +38,14 @@ public class UrlMappingService {
     }
 
     private UrlMappingDTO convertToDto(UrlMapping urlMapping) {
-        UrlMappingDTO UrlMappingDTO = new UrlMappingDTO();
-        UrlMappingDTO.setId(urlMapping.getId());
-        UrlMappingDTO.setOriginalUrl(urlMapping.getOriginalUrl());
-        UrlMappingDTO.setShortUrl(urlMapping.getShortUrl());
-        UrlMappingDTO.setClickCount(urlMapping.getClickCount());
-        UrlMappingDTO.setCreatedDate(urlMapping.getCreatedDate());
-        UrlMappingDTO.setUsername(urlMapping.getUser().getUsername());
-        return UrlMappingDTO;
+        UrlMappingDTO urlMappingDTO = new UrlMappingDTO();
+        urlMappingDTO.setId(urlMapping.getId());
+        urlMappingDTO.setOriginalUrl(urlMapping.getOriginalUrl());
+        urlMappingDTO.setShortUrl(urlMapping.getShortUrl());
+        urlMappingDTO.setClickCount(urlMapping.getClickCount());
+        urlMappingDTO.setCreatedDate(urlMapping.getCreatedDate());
+        urlMappingDTO.setUsername(urlMapping.getUser().getUsername());
+        return urlMappingDTO;
     }
 
     private String generateShortUrl() {
@@ -67,7 +68,7 @@ public class UrlMappingService {
 
     public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
-        if (urlMapping == null) {
+        if (urlMapping != null) {
             return clickEventRepository.findByUrlMappingAndClickDateBetween(urlMapping, start, end).stream()
                     .collect(Collectors.groupingBy(click -> click.getClickDate().toLocalDate(), Collectors.counting()))
                     .entrySet().stream()
@@ -87,20 +88,22 @@ public class UrlMappingService {
         List<ClickEvent> clickEvents = clickEventRepository.findByUrlMappingInAndClickDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
         return clickEvents.stream()
                 .collect(Collectors.groupingBy(click -> click.getClickDate().toLocalDate(), Collectors.counting()));
+
     }
 
     public UrlMapping getOriginalUrl(String shortUrl) {
-        UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
-        if (urlMapping != null) {
-            urlMapping.setClickCount(urlMapping.getClickCount() + 1);
-            urlMappingRepository.save(urlMapping);
+        return urlMappingRepository.findByShortUrl(shortUrl);
+    }
 
-            // Record Click Event
-            ClickEvent clickEvent = new ClickEvent();
-            clickEvent.setClickDate(LocalDateTime.now());
-            clickEvent.setUrlMapping(urlMapping);
-            clickEventRepository.save(clickEvent);
-        }
-        return urlMapping;
+    public void incrementClickCount(UrlMapping urlMapping) {
+        urlMapping.setClickCount(urlMapping.getClickCount() + 1);
+        urlMappingRepository.save(urlMapping);
+    }
+
+    public void recordClickEvent(UrlMapping urlMapping) {
+        ClickEvent clickEvent = new ClickEvent();
+        clickEvent.setClickDate(LocalDateTime.now());
+        clickEvent.setUrlMapping(urlMapping);
+        clickEventRepository.save(clickEvent);
     }
 }

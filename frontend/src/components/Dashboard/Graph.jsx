@@ -20,9 +20,8 @@ ChartJS.register(
 );
 
 const Graph = ({ graphData }) => {
-// Check if graphData is an array before mapping
-  const labels = Array.isArray(graphData) ? graphData.map((item, i) => `${item.clickDate}`) : [];
-  const userPerDaya = Array.isArray(graphData) ? graphData.map((item) => item.count) : [];
+  const labels = graphData?.map((item, i) => `${item.clickDate}`);
+  const userPerDaya = graphData?.map((item) => item.count);
 
   const data = {
     labels:

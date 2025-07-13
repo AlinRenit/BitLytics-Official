@@ -1,9 +1,7 @@
 package com.url.shortener.models;
 
-import com.url.shortener.repository.UserRepository;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Entity
 @Data

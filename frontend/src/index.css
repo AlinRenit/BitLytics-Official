@@ -13,3 +13,7 @@
   --font-roboto: "Roboto", sans-serif;
   --font-montserrat: "Montserrat";
 }
+
+.text-linkColor {
+  color: var(--color-linkColor) !important;
+}
